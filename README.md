@@ -1,40 +1,22 @@
-# Bethany Athletic Club · Analytics preview
+# service-offers
 
-Interactive sample dashboard (Chart.js) prepared with Timberline Data. **Demo data only.**
+Public hub for **Timberline Data** interactive analytics previews (sample data).
 
-Tailored for [Bethany Athletic Club](https://bethanyathleticclub.com/) — private athletic club in the Bethany / west Portland area. Public positioning: premier west-side club since 2015; pools, group fitness, track, bistro, family-friendly mission.
+**Live site (GitHub Pages):** `https://timberlinedata.github.io/service-offers/`
 
-## View locally
+## Structure
 
-Keep **`BAC Logo.webp`** in the same folder as `index.html`. Open `index.html` in a browser, or serve the folder with any static file server.
+| Path | Description |
+|------|-------------|
+| [`index.html`](index.html) | Service offers landing page |
+| [`bethany-athletic-club/`](bethany-athletic-club/) | Bethany Athletic Club · analytics preview + `BAC Logo.webp` |
 
-## Publish to GitHub
+Add new clients as subfolders (e.g. `another-client/index.html`) and link them from the root `index.html`.
 
-From this folder (already initialized with `main`):
+## Local preview
 
-1. Create a **new empty repository** on [github.com/new](https://github.com/new) (no README/license—this folder is the source of truth). Pick a name, e.g. `bethany-athletic-club-analytics-preview`.
-2. In PowerShell:
-
-```powershell
-cd "C:\Users\sveti\OneDrive\Desktop\Work\Bethany Athletic Center"
-git remote add origin https://github.com/YOUR_USERNAME/YOUR_REPO.git
-git push -u origin main
-```
-
-Use your real username and repo URL. If GitHub shows `master` instead of `main`, run `git branch -M main` before pushing.
-
-**GitHub CLI (optional):** if you use `gh auth login`, you can run `gh repo create YOUR_REPO --public --source=. --remote=origin --push`.
+Open `index.html` in a browser, or serve the repo root with any static server.
 
 ## GitHub Pages
 
-After the repo exists on GitHub:
-
-1. **Settings** → **Pages**
-2. **Build and deployment** → Source: **Deploy from a branch**
-3. Branch: **main** · Folder: **/ (root)**
-4. Save. The site will be at `https://<username>.github.io/<repo>/` (may take one to two minutes). Chart.js and assets use relative URLs so the logo and charts load on that path.
-
-## Contents
-
-- `BAC Logo.webp` — club logo (referenced by `index.html`)
-- `index.html` — full interactive preview
+**Settings → Pages:** branch **`main`**, folder **`/ (root)`**.
