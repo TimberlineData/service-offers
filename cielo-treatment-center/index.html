@@ -1,0 +1,1295 @@
+<!DOCTYPE html>
+<!--
+  Cielo Treatment Center × Timberline Data (service sample, demo data only).
+  GitHub Pages: https://timberlinedata.github.io/service-offers/cielo-treatment-center/
+-->
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="description" content="Cielo Treatment Center: interactive analytics preview (census, capacity, referrals, staffing). Sample data. Timberline Data." />
+  <meta name="theme-color" content="#0c1222" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Cielo Treatment Center · Analytics preview | Timberline Data</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    :root {
+      --primary: #1e3a5f;
+      --accent: #38bdf8;
+      --accent-deep: #0ea5e9;
+      --dawn: #fbbf24;
+      --green: #34d399;
+      --blue: #60a5fa;
+      --orange: #fb923c;
+      --purple: #a78bfa;
+      --bg: #0c1222;
+      --surface: #111827;
+      --card: #151f32;
+      --border: rgba(255, 255, 255, 0.08);
+      --text: #e2e8f0;
+      --muted: #94a3b8;
+      --dim: #64748b;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+
+    body {
+      font-family: "Open Sans", system-ui, sans-serif;
+      color: var(--text);
+      background: var(--bg);
+      line-height: 1.6;
+      min-height: 100vh;
+      min-height: 100dvh;
+      overflow-x: clip;
+      touch-action: manipulation;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      background:
+        radial-gradient(ellipse 75% 50% at 50% -20%, rgba(56, 189, 248, 0.18), transparent),
+        radial-gradient(ellipse 45% 35% at 100% 40%, rgba(30, 58, 95, 0.45), transparent),
+        radial-gradient(ellipse 40% 30% at 0% 90%, rgba(251, 191, 36, 0.06), transparent);
+      pointer-events: none;
+    }
+
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      padding: 12px 18px;
+      padding-top: max(12px, env(safe-area-inset-top));
+      padding-left: max(18px, env(safe-area-inset-left));
+      padding-right: max(18px, env(safe-area-inset-right));
+      max-width: 1280px;
+      margin: 0 auto;
+      background: rgba(12, 18, 34, 0.94);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      min-width: 0;
+      flex: 1 1 auto;
+    }
+
+    .nav-logo-img {
+      height: 46px;
+      width: auto;
+      max-width: min(220px, 52vw);
+      object-fit: contain;
+      object-position: left center;
+      display: block;
+      flex-shrink: 0;
+    }
+
+    .hero-logo {
+      width: auto;
+      max-width: min(280px, 88vw);
+      max-height: 96px;
+      height: auto;
+      object-fit: contain;
+      display: block;
+      margin: 0 auto 20px;
+      filter: drop-shadow(0 10px 28px rgba(0, 0, 0, 0.45));
+    }
+
+    .nav-brand-text {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      min-width: 0;
+    }
+
+    .nav-brand-text .nav-title {
+      font-family: "Montserrat", sans-serif;
+      font-weight: 800;
+      font-size: 0.72rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--muted);
+      line-height: 1.2;
+    }
+
+    .nav-brand-text .nav-sub {
+      font-family: "Montserrat", sans-serif;
+      font-weight: 600;
+      font-size: 0.62rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--dim);
+      line-height: 1.2;
+    }
+
+    .shell {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 28px 20px 72px;
+      padding-left: max(20px, env(safe-area-inset-left));
+      padding-right: max(20px, env(safe-area-inset-right));
+      padding-bottom: max(72px, env(safe-area-inset-bottom));
+    }
+
+    .hero {
+      text-align: center;
+      padding: 8px 0 32px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 28px;
+    }
+
+    .hero-badge {
+      display: inline-block;
+      font-family: "Montserrat", sans-serif;
+      font-size: 0.62rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--green);
+      background: rgba(52, 211, 153, 0.1);
+      border: 1px solid rgba(52, 211, 153, 0.35);
+      padding: 6px 14px;
+      border-radius: 4px;
+      margin-bottom: 16px;
+    }
+
+    .hero h1 {
+      font-family: "Montserrat", sans-serif;
+      font-weight: 800;
+      font-size: clamp(1.35rem, 5vw, 2.45rem);
+      line-height: 1.15;
+      color: #fff;
+      max-width: min(38ch, 100%);
+      margin: 0 auto 12px;
+      letter-spacing: -0.02em;
+      padding: 0 4px;
+    }
+
+    .hero .grad {
+      background: linear-gradient(135deg, var(--accent) 0%, var(--dawn) 50%, var(--blue) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero .lead {
+      font-size: clamp(0.95rem, 3.2vw, 1.05rem);
+      color: var(--muted);
+      max-width: 42rem;
+      margin: 0 auto 10px;
+      padding: 0 6px;
+    }
+
+    .hero .meta {
+      font-size: clamp(0.78rem, 2.8vw, 0.88rem);
+      color: var(--dim);
+      max-width: 38rem;
+      margin: 0 auto;
+      padding: 0 6px;
+      line-height: 1.55;
+    }
+
+    .privacy-banner {
+      background: linear-gradient(145deg, rgba(30, 58, 95, 0.55) 0%, rgba(17, 24, 39, 0.95) 100%);
+      border: 1px solid rgba(56, 189, 248, 0.25);
+      border-radius: 12px;
+      padding: 16px 20px;
+      margin-bottom: 20px;
+      border-left: 4px solid var(--accent);
+    }
+
+    .privacy-banner h3 {
+      font-family: "Montserrat", sans-serif;
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--accent);
+      margin-bottom: 8px;
+    }
+
+    .privacy-banner p {
+      font-size: 0.84rem;
+      color: var(--muted);
+      line-height: 1.55;
+      max-width: 52rem;
+    }
+
+    .reading {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px 22px 22px;
+      margin-bottom: 28px;
+    }
+
+    .reading h2 {
+      font-family: "Montserrat", sans-serif;
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .reading h2::before {
+      content: "";
+      width: 4px;
+      height: 1.1em;
+      background: linear-gradient(180deg, var(--accent), var(--dawn));
+      border-radius: 2px;
+    }
+
+    .reading p {
+      font-size: 0.86rem;
+      color: var(--muted);
+      line-height: 1.55;
+      max-width: 52rem;
+    }
+
+    .reading a {
+      color: var(--blue);
+      font-weight: 600;
+      text-decoration: none;
+      border-bottom: 1px solid rgba(96, 165, 250, 0.35);
+    }
+
+    .reading a:hover { color: var(--green); border-bottom-color: rgba(52, 211, 153, 0.5); }
+
+    .reading ul {
+      margin: 12px 0 0;
+      padding-left: 1.15rem;
+      color: var(--muted);
+      font-size: 0.86rem;
+      line-height: 1.55;
+    }
+
+    .reading li { margin-bottom: 8px; }
+
+    .trust-bar {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-bottom: 28px;
+    }
+
+    @media (max-width: 720px) {
+      .trust-bar { grid-template-columns: 1fr; }
+    }
+
+    .trust-pill {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px 18px;
+      font-size: 0.82rem;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .trust-pill strong {
+      display: block;
+      font-family: "Montserrat", sans-serif;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #fff;
+      margin-bottom: 6px;
+    }
+
+    .tablist {
+      display: flex;
+      flex-wrap: nowrap;
+      gap: 8px;
+      margin-bottom: 20px;
+      padding: 8px 10px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scroll-snap-type: x proximity;
+      scrollbar-width: thin;
+    }
+
+    .tablist button {
+      font-family: "Montserrat", sans-serif;
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--muted);
+      background: transparent;
+      border: 1px solid transparent;
+      border-radius: 8px;
+      padding: 12px 14px;
+      min-height: 44px;
+      cursor: pointer;
+      transition: color 0.2s, background 0.2s, border-color 0.2s;
+      flex: 0 0 auto;
+      white-space: nowrap;
+      scroll-snap-align: start;
+    }
+
+    .tablist button:hover {
+      color: #fff;
+      background: rgba(255, 255, 255, 0.04);
+      border-color: var(--border);
+    }
+
+    .tablist button[aria-selected="true"] {
+      color: #fff;
+      background: linear-gradient(145deg, var(--primary) 0%, #152a4a 100%);
+      border-color: rgba(56, 189, 248, 0.25);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+    }
+
+    .tab-panel {
+      display: none;
+      animation: fadeIn 0.25s ease;
+    }
+
+    .tab-panel.active { display: block; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .section-tag {
+      font-family: "Montserrat", sans-serif;
+      font-size: 0.62rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--accent);
+      margin-bottom: 8px;
+    }
+
+    .dash-header { margin-bottom: 20px; }
+
+    .dash-header h2 {
+      font-family: "Montserrat", sans-serif;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 6px;
+    }
+
+    .dash-header .sub { font-size: 0.88rem; color: var(--muted); max-width: 42rem; }
+
+    .dash-header .pitch {
+      font-size: 0.9rem;
+      color: var(--text);
+      margin-top: 10px;
+      max-width: 44rem;
+    }
+
+    .dash-filters { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 14px; }
+
+    .dash-select {
+      font-family: "Montserrat", sans-serif;
+      font-size: 0.78rem;
+      font-weight: 600;
+      padding: 8px 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--surface);
+      color: var(--text);
+      cursor: pointer;
+    }
+
+    .dash-select:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2);
+    }
+
+    .kpi-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+
+    .kpi-card {
+      background: linear-gradient(145deg, var(--primary) 0%, #152a4a 100%);
+      border-radius: 12px;
+      padding: 18px 16px;
+      color: #fff;
+      border: 1px solid rgba(56, 189, 248, 0.12);
+      box-shadow: 0 8px 28px rgba(0, 0, 0, 0.3);
+    }
+
+    .kpi-label {
+      font-family: "Montserrat", sans-serif;
+      font-size: 0.62rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: rgba(255, 255, 255, 0.55);
+      margin-bottom: 8px;
+    }
+
+    .kpi-value {
+      font-family: "Montserrat", sans-serif;
+      font-size: 1.5rem;
+      font-weight: 800;
+      line-height: 1.1;
+      margin-bottom: 6px;
+    }
+
+    .kpi-delta {
+      font-family: "Montserrat", sans-serif;
+      font-size: 0.72rem;
+      font-weight: 600;
+    }
+
+    .kpi-delta.up { color: #6ee7b7; }
+    .kpi-delta.down { color: #fca5a5; }
+
+    .chart-row, .chart-row-eq {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    @media (max-width: 900px) {
+      .chart-row, .chart-row-eq { grid-template-columns: 1fr; }
+      .kpi-row { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 520px) {
+      .kpi-row { grid-template-columns: 1fr; }
+    }
+
+    .chart-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+    }
+
+    .chart-card h3 {
+      font-family: "Montserrat", sans-serif;
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: #fff;
+      margin: 0 0 8px 0;
+    }
+
+    .chart-caption {
+      font-size: 0.78rem;
+      color: var(--dim);
+      line-height: 1.45;
+      margin: 0 0 14px 0;
+    }
+
+    .chart-wrap {
+      position: relative;
+      width: 100%;
+      min-height: clamp(220px, 38vw, 280px);
+    }
+
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .data-table th, .data-table td {
+      text-align: left;
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .data-table th {
+      font-family: "Montserrat", sans-serif;
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--dim);
+    }
+
+    .data-table .num { font-variant-numeric: tabular-nums; }
+
+    .cta-strip {
+      margin-top: 40px;
+      padding: 36px 24px;
+      text-align: center;
+      border-radius: 16px;
+      background: linear-gradient(180deg, rgba(30, 58, 95, 0.35) 0%, rgba(12, 18, 34, 0.95) 100%);
+      border: 1px solid var(--border);
+    }
+
+    .cta-strip h3 {
+      font-family: "Montserrat", sans-serif;
+      font-size: 1.2rem;
+      color: #fff;
+      margin-bottom: 10px;
+    }
+
+    .cta-strip p { color: var(--muted); font-size: 0.92rem; max-width: 32rem; margin: 0 auto 16px; }
+
+    .cta-strip a {
+      display: inline-block;
+      font-family: "Montserrat", sans-serif;
+      font-weight: 700;
+      font-size: 0.82rem;
+      text-decoration: none;
+      color: #0c1222;
+      background: var(--accent);
+      padding: 12px 26px;
+      border-radius: 8px;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .cta-strip a:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(56, 189, 248, 0.35);
+    }
+
+    .cta-note {
+      margin-top: 18px;
+      font-size: 0.75rem;
+      color: var(--dim);
+      max-width: 36rem;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    footer {
+      text-align: center;
+      padding: 28px 12px;
+      border-top: 1px solid var(--border);
+      font-size: 0.78rem;
+      color: var(--dim);
+      margin-top: 24px;
+    }
+
+    footer a {
+      color: var(--blue);
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .visually-hidden {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    @media (min-width: 900px) {
+      .tablist { flex-wrap: wrap; overflow-x: visible; }
+    }
+  </style>
+</head>
+<body>
+  <div style="max-width:1280px;margin:0 auto;padding:12px 18px 0;padding-left:max(18px,env(safe-area-inset-left));padding-right:max(18px,env(safe-area-inset-right));font-family:Montserrat,sans-serif;font-size:0.75rem;">
+    <a href="../index.html" style="color:#64748b;text-decoration:none;">← Service offers</a>
+  </div>
+  <nav class="nav" aria-label="Report header">
+    <div class="nav-brand">
+      <img
+        class="nav-logo-img"
+        src="cielo-logo.avif"
+        alt="Cielo Treatment Center"
+        width="220"
+        height="46"
+        decoding="async"
+      />
+      <div class="nav-brand-text">
+        <span class="nav-title">Analytics preview</span>
+        <span class="nav-sub">Sample dashboards · Timberline Data</span>
+      </div>
+    </div>
+  </nav>
+
+  <div class="shell">
+    <header class="hero">
+      <img
+        class="hero-logo"
+        src="cielo-logo.avif"
+        alt=""
+        width="280"
+        height="96"
+        role="presentation"
+        decoding="async"
+      />
+      <span class="hero-badge">Interactive preview · De-identified demo data only</span>
+      <h1>Run a multi-track outpatient center with <span class="grad">clarity and care.</span></h1>
+      <p class="lead">
+        Integrated addiction and mental health, day and evening IOP, affirming programming, DUII, and culturally informed tracks generate a lot of operational signal. <strong style="color:#fff">Timberline Data</strong> can turn census, program mix, referrals, scheduling strain, and payer mix into views leadership can scan in minutes, while your EHR stays the system of record.
+      </p>
+      <p class="meta">
+        Prepared for <strong style="color:var(--muted)">Cielo Treatment Center</strong>. All figures are synthetic for discussion, not your clinical or financial records.
+      </p>
+    </header>
+
+    <div class="privacy-banner" role="region" aria-label="Privacy and compliance note">
+      <h3>Privacy-first by design</h3>
+      <p>
+        Live builds use a <strong style="color:var(--text)">minimum-necessary</strong> approach: aggregated census, payer mix, utilization, and ops KPIs, usually without row-level PHI on a shared dashboard. Substance-use records can carry <strong style="color:var(--text)">extra protections</strong>; we scope integrations to match. Identifiable data follows your policies and a <strong style="color:var(--text)">BAA</strong> where required. This file is synthetic only, safe to forward as a vision deck.
+      </p>
+    </div>
+
+    <aside class="reading">
+      <h2>How to read this preview</h2>
+      <p>
+        Same patterns as our live
+        <a href="https://timberlinedata.tech/portfolio/index.html" target="_blank" rel="noopener">portfolio</a>
+        (Chart.js, filters, tabs). Nothing here touches your EHR. It is a <strong style="color:#fff">conversation starter</strong> for a pilot after we map exports or read-only connections you approve.
+      </p>
+      <p style="margin-top:12px"><strong style="color:#fff">First pilot scope often looks like:</strong></p>
+      <ul>
+        <li><strong>Census and capacity</strong> by track (evening IOP, co-occurring, DUII, etc.) against group slots.</li>
+        <li><strong>Referral and intake funnel</strong> in aggregates (calls, assessments booked, admits).</li>
+        <li><strong>Staffing vs. scheduled demand</strong> so overtime and bottlenecks show up before they harden.</li>
+        <li><strong>Optional later:</strong> AR aging and denials beside census when billing wants the same picture.</li>
+      </ul>
+    </aside>
+
+    <div class="trust-bar" aria-label="Why centers choose a pilot">
+      <div class="trust-pill">
+        <strong>EHR stays in place</strong>
+        Reporting sits on top of exports or approved connectors (SimplePractice, Valant, Kipu, billing, etc.). No rip-and-replace.
+      </div>
+      <div class="trust-pill">
+        <strong>Ops-first metrics</strong>
+        We focus on access, utilization, and wait times unless you define clinically validated outcome measures you want tracked.
+      </div>
+    </div>
+
+    <div class="tablist" role="tablist" aria-label="Cielo analytics preview sections">
+      <button type="button" role="tab" id="tab-kpi" aria-selected="true" aria-controls="panel-kpi" data-tab="kpi">Overview</button>
+      <button type="button" role="tab" id="tab-prog" aria-selected="false" aria-controls="panel-prog" data-tab="prog">Capacity</button>
+      <button type="button" role="tab" id="tab-ref" aria-selected="false" aria-controls="panel-ref" data-tab="ref">Referrals</button>
+      <button type="button" role="tab" id="tab-staff" aria-selected="false" aria-controls="panel-staff" data-tab="staff">Staffing</button>
+    </div>
+
+    <!-- Overview -->
+    <div class="tab-panel active" id="panel-kpi" role="tabpanel" aria-labelledby="tab-kpi" data-panel="kpi">
+      <div class="section-tag">Executive dashboards &amp; KPI systems</div>
+      <div class="dash-header">
+        <h2>Operational command center</h2>
+        <p class="sub">Cielo Treatment Center · Portland outpatient (demo)</p>
+        <p class="pitch">
+          Census momentum, which tracks are carrying load, and whether payer mix is shifting. Toggle the period filter: the demo KPIs and charts change shape so you can see what “one screen” buys you before bottlenecks hit client experience.
+        </p>
+        <div class="dash-filters">
+          <label class="visually-hidden" for="kpiPeriod">Period</label>
+          <select class="dash-select" id="kpiPeriod" aria-label="Time period">
+            <option value="month">This month</option>
+            <option value="quarter">Quarter to date</option>
+            <option value="year">Year to date</option>
+          </select>
+        </div>
+      </div>
+      <div class="kpi-row">
+        <div class="kpi-card">
+          <div class="kpi-label">Active census (all levels)</div>
+          <div class="kpi-value" id="kpiCensus">186</div>
+          <div class="kpi-delta up" id="kpiCensusD">▲ 5.1% vs prior period</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Admits (period)</div>
+          <div class="kpi-value" id="kpiAdmits">42</div>
+          <div class="kpi-delta up" id="kpiAdmitsD">▲ vs prior (demo)</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Group session completion</div>
+          <div class="kpi-value" id="kpiAttend">87%</div>
+          <div class="kpi-delta up" id="kpiAttendD">Operational aggregate (demo)</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Commercial / Medicaid mix</div>
+          <div class="kpi-value" id="kpiPayer">54 / 46</div>
+          <div class="kpi-delta up" id="kpiPayerD">% of billable census (demo)</div>
+        </div>
+      </div>
+      <div class="chart-row">
+        <div class="chart-card">
+          <h3>Census trend (indexed)</h3>
+          <p class="chart-caption">Switch period (month / quarter / year). The gap between low and high points is intentional so the trend reads at a glance.</p>
+          <div class="chart-wrap"><canvas id="chartKpiLine"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <h3>Census by program track</h3>
+          <p class="chart-caption">Uneven slices on purpose: a real roster rarely splits evenly across tracks.</p>
+          <div class="chart-wrap"><canvas id="chartKpiDonut"></canvas></div>
+        </div>
+      </div>
+      <div class="chart-card" style="margin-top:16px;border-left:3px solid var(--green)">
+        <h3 style="margin-bottom:10px">Sample weekly snapshot (demo narrative)</h3>
+        <p class="chart-caption" style="margin-bottom:10px">What we layer on after dashboards go live: plain language, not another tab to click.</p>
+        <p style="font-size:0.88rem;color:var(--muted);margin-bottom:10px"><strong style="color:#fff">Headline:</strong> Evening IOP is pegged near capacity while mental-health IOP no-shows jumped after the holiday week.</p>
+        <ul style="margin:0;padding-left:1.15rem;color:var(--muted);font-size:0.86rem;line-height:1.55">
+          <li><strong style="color:var(--green)">Access:</strong> Hospital-sourced assessments up; staff Thursday triage block.</li>
+          <li><strong style="color:var(--green)">Risk:</strong> Co-occurring waitlist index spiking; open a second group or stagger starts.</li>
+          <li><strong style="color:var(--green)">Win:</strong> DUII education completions on pace; certificates inside state turnaround window.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Capacity -->
+    <div class="tab-panel" id="panel-prog" role="tabpanel" aria-labelledby="tab-prog" hidden data-panel="prog">
+      <div class="section-tag">Capacity &amp; utilization</div>
+      <div class="dash-header">
+        <h2>Where groups are full vs. where wait builds</h2>
+        <p class="pitch">
+          Flip the view from utilization to waitlist index. The demo exaggerates spread (one track nearly empty, another on fire) so the chart tells a story in five seconds.
+        </p>
+        <div class="dash-filters">
+          <label class="visually-hidden" for="progView">View</label>
+          <select class="dash-select" id="progView" aria-label="View mode">
+            <option value="util">Group seat utilization %</option>
+            <option value="wait">Waitlist index (demo)</option>
+          </select>
+        </div>
+      </div>
+      <div class="chart-row-eq">
+        <div class="chart-card">
+          <h3>Utilization by program track</h3>
+          <p class="chart-caption">Utilization % vs. waitlist index (toggle above). Colors flag stress automatically in the demo.</p>
+          <div class="chart-wrap"><canvas id="chartProgBar"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <h3>Weekly group hours scheduled</h3>
+          <p class="chart-caption">Thursday spike vs. light Friday (demo). Pairs with Staffing for counselor load.</p>
+          <div class="chart-wrap"><canvas id="chartProgHours"></canvas></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Referrals -->
+    <div class="tab-panel" id="panel-ref" role="tabpanel" aria-labelledby="tab-ref" hidden data-panel="ref">
+      <div class="section-tag">Pipeline visibility</div>
+      <div class="dash-header">
+        <h2>Referrals and intake efficiency</h2>
+        <p class="pitch">
+          See which channels actually feed intake. The demo uses a wide spread in inquiry volume so the bar chart is impossible to miss.
+        </p>
+      </div>
+      <div class="chart-row-eq">
+        <div class="chart-card">
+          <h3>Inquiries by source (MTD demo)</h3>
+          <p class="chart-caption">Aggregated counts only; production ties to your CRM or call log categories.</p>
+          <div class="chart-wrap"><canvas id="chartRefBar"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <h3>Intake funnel (demo)</h3>
+          <p class="chart-caption">Sharp drop at “assessment completed” (demo) flags where schedulers or payer verification may be leaking.</p>
+          <div class="chart-wrap"><canvas id="chartRefFunnel"></canvas></div>
+        </div>
+      </div>
+      <div class="chart-card" style="margin-top:16px">
+        <h3>Channel notes (sample)</h3>
+        <table class="data-table">
+          <thead><tr><th>Source</th><th>Demo signal</th><th>Operational idea</th></tr></thead>
+          <tbody>
+            <tr><td>Hospital / provider</td><td class="num">Strong to co-occurring</td><td>Quarterly liaison lunch + one-page fax-back</td></tr>
+            <tr><td>Court / DUII</td><td class="num">Steady</td><td>Automate certificate turnaround tracking</td></tr>
+            <tr><td>Digital / search</td><td class="num">Rising</td><td>Align landing pages to evening IOP keywords</td></tr>
+            <tr><td>Community / alumni</td><td class="num">High trust</td><td>Peer event ROI in same dashboard</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Staffing -->
+    <div class="tab-panel" id="panel-staff" role="tabpanel" aria-labelledby="tab-staff" hidden data-panel="staff">
+      <div class="section-tag">Staffing optimization</div>
+      <div class="dash-header">
+        <h2>Clinician load vs. scheduled demand</h2>
+        <p class="pitch">
+          Compare demand index to staffed capacity. Toggle “high-intake week”: the gap between blue and amber bars widens on purpose so overload days are obvious.
+        </p>
+        <div class="dash-filters">
+          <label class="visually-hidden" for="staffWeek">Week type</label>
+          <select class="dash-select" id="staffWeek" aria-label="Week type">
+            <option value="typical">Typical week</option>
+            <option value="heavy">High-intake week (demo)</option>
+          </select>
+        </div>
+      </div>
+      <div class="chart-row-eq">
+        <div class="chart-card">
+          <h3>Clinical hours: demand vs. capacity index</h3>
+          <p class="chart-caption"><strong>Sky:</strong> client-facing hours needed. <strong>Amber:</strong> staffed capacity index.</p>
+          <div class="chart-wrap"><canvas id="chartStaff"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <h3>Readiness checklist (demo)</h3>
+          <table class="data-table">
+            <thead><tr><th>Signal</th><th>Status</th><th>Note</th></tr></thead>
+            <tbody id="staffTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="cta-strip">
+      <h3>Next step: a scoped pilot on operational data</h3>
+      <p>
+        Most centers start with <strong style="color:#fff">one dashboard</strong> and <strong style="color:#fff">two sources</strong> (for example EHR census export plus scheduling CSV). We aim for something you can use in leadership meetings in about <strong style="color:#fff">two weeks</strong>, with privacy boundaries written down up front.
+      </p>
+      <a href="https://timberlinedata.tech/contact.html" target="_blank" rel="noopener">Talk to Timberline Data</a>
+      <p class="cta-note">
+        Sample only. Not clinical, legal, billing, or compliance advice. Operating choices stay with center leadership.
+      </p>
+    </div>
+
+    <footer>
+      <p>
+        <strong>Cielo Treatment Center</strong> · Analytics preview ·
+        <a href="https://timberlinedata.tech/" target="_blank" rel="noopener">Timberline Data</a>
+        · April 2026
+      </p>
+      <p style="margin-top:8px">All figures are <strong>synthetic</strong> for sales discussion.</p>
+    </footer>
+  </div>
+
+  <script>
+    const COLORS = {
+      green: "#34d399",
+      greenLight: "rgba(52, 211, 153, 0.2)",
+      blue: "#60a5fa",
+      sky: "#38bdf8",
+      skyLight: "rgba(56, 189, 248, 0.25)",
+      orange: "#fb923c",
+      orangeLight: "rgba(251, 146, 60, 0.3)",
+      purple: "#a78bfa",
+      gold: "#fbbf24",
+      gray: "#94a3b8",
+      navy: "#1e3a5f"
+    };
+
+    const tooltipTheme = {
+      backgroundColor: "#1e3a5f",
+      titleFont: { family: "Montserrat", weight: "700", size: 12 },
+      bodyFont: { family: "Open Sans", size: 12 },
+      padding: 12,
+      cornerRadius: 8,
+      borderColor: "rgba(255,255,255,0.1)",
+      borderWidth: 1
+    };
+
+    const scalesDark = {
+      x: {
+        ticks: { color: "#94a3b8", font: { family: "Open Sans", size: 11 } },
+        grid: { color: "rgba(255,255,255,0.06)" }
+      },
+      y: {
+        ticks: { color: "#94a3b8", font: { family: "Open Sans", size: 11 } },
+        grid: { color: "rgba(255,255,255,0.06)" }
+      }
+    };
+
+    const charts = {};
+
+    function destroyChart(id) {
+      if (charts[id]) {
+        charts[id].destroy();
+        delete charts[id];
+      }
+    }
+
+    const KPI_DATA = {
+      month: {
+        kpis: {
+          census: "198",
+          censusD: "▲ 14% vs prior month (demo)",
+          admits: "51",
+          admitsD: "▲ 21 vs prior month",
+          attend: "91%",
+          attendD: "▲ 6 pp vs prior month",
+          payer: "63 / 37",
+          payerD: "Commercial heavier this month"
+        },
+        line: { labels: ["W1", "W2", "W3", "W4"], data: [58, 72, 86, 100] },
+        donut: {
+          labels: ["Co-occurring IOP", "Evening IOP", "Addiction IOP", "Mental health IOP", "DUII / education", "Specialty tracks"],
+          data: [34, 26, 14, 11, 9, 6]
+        }
+      },
+      quarter: {
+        kpis: {
+          census: "162",
+          censusD: "▼ 9% vs prior quarter (demo)",
+          admits: "96",
+          admitsD: "Slower intake quarter",
+          attend: "76%",
+          attendD: "▼ 8 pp vs prior Q (watch)",
+          payer: "44 / 56",
+          payerD: "Medicaid share up"
+        },
+        line: { labels: ["M1", "M2", "M3"], data: [100, 74, 62] },
+        donut: {
+          labels: ["Co-occurring IOP", "Evening IOP", "Addiction IOP", "Mental health IOP", "DUII / education", "Specialty tracks"],
+          data: [22, 18, 24, 20, 11, 5]
+        }
+      },
+      year: {
+        kpis: {
+          census: "198",
+          censusD: "▲ 22% YoY (demo)",
+          admits: "468",
+          admitsD: "YTD admits",
+          attend: "84%",
+          attendD: "Blended programs",
+          payer: "51 / 49",
+          payerD: "Even split YTD"
+        },
+        line: { labels: ["Q1", "Q2", "Q3", "Q4"], data: [48, 68, 88, 100] },
+        donut: {
+          labels: ["Co-occurring IOP", "Evening IOP", "Addiction IOP", "Mental health IOP", "DUII / education", "Specialty tracks"],
+          data: [30, 24, 17, 13, 10, 6]
+        }
+      }
+    };
+
+    function buildKpiTab() {
+      const period = document.getElementById("kpiPeriod").value;
+      const d = KPI_DATA[period];
+      document.getElementById("kpiCensus").textContent = d.kpis.census;
+      document.getElementById("kpiCensusD").textContent = d.kpis.censusD;
+      document.getElementById("kpiAdmits").textContent = d.kpis.admits;
+      document.getElementById("kpiAdmitsD").textContent = d.kpis.admitsD;
+      document.getElementById("kpiAttend").textContent = d.kpis.attend;
+      document.getElementById("kpiAttendD").textContent = d.kpis.attendD;
+      document.getElementById("kpiPayer").textContent = d.kpis.payer;
+      document.getElementById("kpiPayerD").textContent = d.kpis.payerD;
+
+      const attendEl = document.getElementById("kpiAttendD");
+      const attendGood = d.kpis.attendD.includes("▲") || d.kpis.attendD.includes("Blended");
+      attendEl.className = "kpi-delta " + (attendGood ? "up" : "down");
+
+      const censusEl = document.getElementById("kpiCensusD");
+      censusEl.className = "kpi-delta " + (d.kpis.censusD.includes("▼") ? "down" : "up");
+
+      const admitsEl = document.getElementById("kpiAdmitsD");
+      admitsEl.className = "kpi-delta " + (d.kpis.admitsD.includes("Slower") || d.kpis.admitsD.includes("▼") ? "down" : "up");
+
+      destroyChart("kpiLine");
+      charts.kpiLine = new Chart(document.getElementById("chartKpiLine"), {
+        type: "line",
+        data: {
+          labels: d.line.labels,
+          datasets: [{
+            label: "Census index",
+            data: d.line.data,
+            borderColor: COLORS.sky,
+            backgroundColor: COLORS.skyLight,
+            fill: true,
+            tension: 0.35,
+            borderWidth: 2.5
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false }, tooltip: tooltipTheme },
+          scales: scalesDark
+        }
+      });
+
+      destroyChart("kpiDonut");
+      charts.kpiDonut = new Chart(document.getElementById("chartKpiDonut"), {
+        type: "doughnut",
+        data: {
+          labels: d.donut.labels,
+          datasets: [{
+            data: d.donut.data,
+            backgroundColor: [COLORS.sky, COLORS.purple, COLORS.green, COLORS.blue, COLORS.orange, COLORS.gold],
+            borderWidth: 0,
+            hoverOffset: 8
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          cutout: "62%",
+          plugins: {
+            tooltip: { ...tooltipTheme, callbacks: { label: (c) => " " + c.label + ": " + c.parsed + "%" } },
+            legend: {
+              position: "bottom",
+              labels: { color: "#94a3b8", font: { family: "Montserrat", size: 9 }, usePointStyle: true, padding: 10 }
+            }
+          }
+        }
+      });
+    }
+
+    function buildProgTab() {
+      const mode = document.getElementById("progView").value;
+      const labels = ["Co-occurring", "Evening IOP", "Day IOP", "MH IOP", "DUII", "Young adults", "LGBTQ+ track", "Working pros"];
+      const util = [98, 44, 88, 71, 92, 38, 52, 85];
+      const wait = [3, 28, 8, 18, 5, 26, 21, 9];
+      const data = mode === "util" ? util : wait;
+      const label = mode === "util" ? "Utilization %" : "Waitlist index";
+
+      destroyChart("progBar");
+      charts.progBar = new Chart(document.getElementById("chartProgBar"), {
+        type: "bar",
+        data: {
+          labels,
+          datasets: [{
+            label,
+            data,
+            backgroundColor: data.map((v, i) =>
+              mode === "util"
+                ? (v >= 90 ? COLORS.sky : v >= 75 ? COLORS.blue : COLORS.orange)
+                : (v >= 15 ? COLORS.orange : COLORS.green)
+            ),
+            borderRadius: 6
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              ...tooltipTheme,
+              callbacks: {
+                label: (c) =>
+                  mode === "util" ? " " + c.parsed.y + "% utilized" : " Waitlist index: " + c.parsed.y
+              }
+            }
+          },
+          scales: {
+            ...scalesDark,
+            y: {
+              ...scalesDark.y,
+              beginAtZero: true,
+              max: mode === "util" ? 100 : 32,
+              ticks: {
+                ...scalesDark.y.ticks,
+                callback: (v) => (mode === "util" ? v + "%" : v)
+              }
+            }
+          }
+        }
+      });
+
+      destroyChart("progHours");
+      charts.progHours = new Chart(document.getElementById("chartProgHours"), {
+        type: "bar",
+        data: {
+          labels: ["Mon", "Tue", "Wed", "Thu", "Fri"],
+          datasets: [{
+            label: "Group hours",
+            data: [108, 112, 118, 142, 74],
+            backgroundColor: COLORS.skyLight,
+            borderColor: COLORS.sky,
+            borderWidth: 2,
+            borderRadius: 6
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false }, tooltip: tooltipTheme },
+          scales: { ...scalesDark, y: { ...scalesDark.y, beginAtZero: true } }
+        }
+      });
+    }
+
+    function buildRefTab() {
+      destroyChart("refBar");
+      charts.refBar = new Chart(document.getElementById("chartRefBar"), {
+        type: "bar",
+        data: {
+          labels: ["Provider / hospital", "Court / DUII", "Search / web", "Alumni / word of mouth", "Payer directory", "Other"],
+          datasets: [{
+            label: "Inquiries",
+            data: [58, 8, 22, 34, 11, 6],
+            backgroundColor: [COLORS.sky, COLORS.purple, COLORS.blue, COLORS.green, COLORS.orange, COLORS.gray],
+            borderRadius: 6
+          }]
+        },
+        options: {
+          indexAxis: "y",
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false }, tooltip: tooltipTheme },
+          scales: { ...scalesDark, x: { ...scalesDark.x, beginAtZero: true } }
+        }
+      });
+
+      destroyChart("refFunnel");
+      charts.refFunnel = new Chart(document.getElementById("chartRefFunnel"), {
+        type: "line",
+        data: {
+          labels: ["Contact", "Assess. booked", "Assess. done", "Admitted"],
+          datasets: [{
+            label: "Conversion % of prior step",
+            data: [100, 68, 36, 82],
+            borderColor: COLORS.green,
+            backgroundColor: COLORS.greenLight,
+            fill: true,
+            tension: 0.35,
+            borderWidth: 2
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { tooltip: tooltipTheme },
+          scales: { ...scalesDark, y: { ...scalesDark.y, beginAtZero: true, max: 110, ticks: { ...scalesDark.y.ticks, callback: (v) => v + "%" } } }
+        }
+      });
+    }
+
+    const STAFF = {
+      typical: {
+        demand: [70, 82, 88, 86, 78, 62, 52],
+        cap: [80, 84, 90, 88, 82, 74, 62],
+        rows: [
+          ["Evening IOP coverage", "OK", "Within staffed band"],
+          ["Assessment backlog", "Watch", "2-3 day average (demo)"],
+          ["Supervision hours", "OK", "LMFT / LCSW mix stable"],
+          ["Overtime index", "Elevated", "One block flagged Fri PM"]
+        ]
+      },
+      heavy: {
+        demand: [88, 98, 112, 118, 108, 96, 82],
+        cap: [78, 80, 84, 82, 78, 72, 58],
+        rows: [
+          ["Evening IOP coverage", "Tight", "Consider per-diem pool"],
+          ["Assessment backlog", "Risk", "Extend triage slot or add half-day"],
+          ["Supervision hours", "Watch", "Stack complex cases Tue"],
+          ["Overtime index", "High", "Intake week; temp relief budget (demo)"]
+        ]
+      }
+    };
+
+    function buildStaffTab() {
+      const w = document.getElementById("staffWeek").value;
+      const d = STAFF[w];
+      const body = document.getElementById("staffTableBody");
+      body.innerHTML = d.rows.map(([a, b, c]) => `<tr><td>${a}</td><td class="num">${b}</td><td>${c}</td></tr>`).join("");
+
+      destroyChart("staff");
+      charts.staff = new Chart(document.getElementById("chartStaff"), {
+        type: "bar",
+        data: {
+          labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+          datasets: [
+            {
+              label: "Demand index",
+              data: d.demand,
+              backgroundColor: COLORS.sky,
+              borderRadius: 4
+            },
+            {
+              label: "Staffed capacity",
+              data: d.cap,
+              backgroundColor: COLORS.orangeLight,
+              borderColor: COLORS.orange,
+              borderWidth: 2,
+              borderRadius: 4
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { tooltip: tooltipTheme },
+          scales: { ...scalesDark, y: { ...scalesDark.y, beginAtZero: true, max: 125 } }
+        }
+      });
+    }
+
+    const tabCharts = {
+      kpi: () => buildKpiTab(),
+      prog: () => buildProgTab(),
+      ref: () => buildRefTab(),
+      staff: () => buildStaffTab()
+    };
+
+    const initialized = {};
+
+    function resizeAllCharts() {
+      Object.values(charts).forEach((c) => {
+        if (c && typeof c.resize === "function") c.resize();
+      });
+    }
+
+    function ensureCharts(panel) {
+      if (!initialized[panel]) {
+        tabCharts[panel]();
+        initialized[panel] = true;
+      }
+      setTimeout(resizeAllCharts, 50);
+    }
+
+    function activateTab(name) {
+      document.querySelectorAll('[role="tab"]').forEach((btn) => {
+        const on = btn.getAttribute("data-tab") === name;
+        btn.setAttribute("aria-selected", on ? "true" : "false");
+      });
+      document.querySelectorAll(".tab-panel").forEach((panel) => {
+        const on = panel.getAttribute("data-panel") === name;
+        panel.classList.toggle("active", on);
+        panel.hidden = !on;
+      });
+      ensureCharts(name);
+    }
+
+    document.querySelectorAll('[role="tab"]').forEach((btn) => {
+      btn.addEventListener("click", () => activateTab(btn.getAttribute("data-tab")));
+    });
+
+    document.getElementById("kpiPeriod").addEventListener("change", () => {
+      if (document.querySelector('[data-panel="kpi"]').classList.contains("active")) buildKpiTab();
+    });
+
+    document.getElementById("progView").addEventListener("change", () => {
+      if (document.querySelector('[data-panel="prog"]').classList.contains("active")) buildProgTab();
+    });
+
+    document.getElementById("staffWeek").addEventListener("change", () => {
+      if (document.querySelector('[data-panel="staff"]').classList.contains("active")) buildStaffTab();
+    });
+
+    activateTab("kpi");
+
+    let resizeTimer;
+    window.addEventListener("resize", () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(resizeAllCharts, 120);
+    });
+    window.addEventListener("orientationchange", () => {
+      setTimeout(resizeAllCharts, 350);
+    });
+  </script>
+</body>
+</html>

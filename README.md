@@ -10,6 +10,7 @@ Public hub for **Timberline Data** interactive analytics previews (sample data).
 |------|-------------|
 | [`index.html`](index.html) | Service offers landing page |
 | [`bethany-athletic-club/`](bethany-athletic-club/) | Bethany Athletic Club · analytics preview + `BAC Logo.webp` |
+| [`cielo-treatment-center/`](cielo-treatment-center/) | Cielo Treatment Center · analytics preview + `cielo-logo.avif` |
 
 Add new clients as subfolders (e.g. `another-client/index.html`) and link them from the root `index.html`.
 
