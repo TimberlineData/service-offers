@@ -609,11 +609,219 @@
     @media (min-width: 900px) {
       .tablist { flex-wrap: wrap; overflow-x: visible; }
     }
+
+    .site-back {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 10px 18px 0;
+      padding-left: max(18px, env(safe-area-inset-left));
+      padding-right: max(18px, env(safe-area-inset-right));
+    }
+
+    .site-back a {
+      display: inline-flex;
+      align-items: center;
+      min-height: 44px;
+      padding: 6px 10px 6px 0;
+      margin: -4px 0;
+      font-family: "Montserrat", sans-serif;
+      font-size: 0.8rem;
+      color: #94a3b8;
+      text-decoration: none;
+      -webkit-tap-highlight-color: rgba(255, 255, 255, 0.08);
+    }
+
+    .table-scroll {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      margin: 0 -6px;
+      padding: 0 6px 6px;
+      overscroll-behavior-x: contain;
+      scrollbar-width: thin;
+    }
+
+    .table-scroll .data-table {
+      width: 100%;
+    }
+
+    @media (max-width: 639px) {
+      .table-scroll .data-table {
+        min-width: 520px;
+      }
+
+      .shell {
+        padding: 20px 14px max(72px, env(safe-area-inset-bottom));
+        padding-left: max(14px, env(safe-area-inset-left));
+        padding-right: max(14px, env(safe-area-inset-right));
+      }
+
+      .site-back {
+        padding-left: max(14px, env(safe-area-inset-left));
+        padding-right: max(14px, env(safe-area-inset-right));
+      }
+
+      .nav {
+        padding: 10px 14px;
+        padding-top: max(10px, env(safe-area-inset-top));
+        padding-left: max(14px, env(safe-area-inset-left));
+        padding-right: max(14px, env(safe-area-inset-right));
+      }
+
+      .nav-brand {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px;
+      }
+
+      .nav-brand-text {
+        align-items: center;
+        text-align: center;
+        width: 100%;
+      }
+
+      .nav-brand-text .nav-title,
+      .nav-brand-text .nav-sub {
+        text-align: center;
+      }
+
+      .nav-logo-img {
+        max-width: min(200px, 72vw);
+        height: auto;
+        max-height: 48px;
+      }
+
+      .hero {
+        padding: 4px 0 24px;
+        margin-bottom: 22px;
+      }
+
+      .hero-logo {
+        max-height: 76px;
+        margin-bottom: 14px;
+      }
+
+      .hero h1 {
+        max-width: 100%;
+      }
+
+      .privacy-banner,
+      .reading {
+        padding: 16px 14px;
+      }
+
+      .trust-pill {
+        padding: 14px 14px;
+      }
+
+      .tablist {
+        gap: 6px;
+        padding: 10px 8px;
+        margin-left: -2px;
+        margin-right: -2px;
+        width: calc(100% + 4px);
+        overscroll-behavior-x: contain;
+      }
+
+      .tablist button {
+        min-height: 48px;
+        padding: 12px 16px;
+        font-size: 0.68rem;
+        -webkit-tap-highlight-color: rgba(255, 255, 255, 0.08);
+      }
+
+      .dash-header h2 {
+        font-size: 1.1rem;
+        line-height: 1.25;
+      }
+
+      .dash-header .pitch,
+      .dash-header .sub {
+        font-size: 0.86rem;
+      }
+
+      .dash-filters {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .dash-select {
+        width: 100%;
+        max-width: 100%;
+        min-height: 48px;
+        font-size: 16px;
+        padding: 10px 14px;
+      }
+
+      .kpi-card {
+        padding: 16px 14px;
+      }
+
+      .kpi-value {
+        font-size: 1.35rem;
+      }
+
+      .chart-card {
+        padding: 16px 14px;
+      }
+
+      .chart-wrap {
+        min-height: 240px;
+      }
+
+      .chart-wrap canvas {
+        max-height: none !important;
+      }
+
+      .cta-strip {
+        padding: 28px 16px;
+        margin-top: 32px;
+        border-radius: 12px;
+      }
+
+      .cta-strip p {
+        padding: 0 4px;
+        font-size: 0.9rem;
+      }
+
+      .cta-strip a {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        max-width: 100%;
+        min-height: 48px;
+        padding: 14px 20px;
+        box-sizing: border-box;
+        font-size: 0.85rem;
+      }
+
+      .cta-note {
+        padding: 0 8px;
+        font-size: 0.72rem;
+      }
+
+      footer {
+        padding: 24px 12px max(24px, env(safe-area-inset-bottom));
+      }
+
+      .data-table th,
+      .data-table td {
+        padding: 10px 8px;
+        font-size: 0.76rem;
+      }
+    }
+
+    @media (max-width: 380px) {
+      .tablist button {
+        padding: 12px 12px;
+        font-size: 0.62rem;
+      }
+    }
   </style>
 </head>
 <body>
-  <div style="max-width:1280px;margin:0 auto;padding:12px 18px 0;padding-left:max(18px,env(safe-area-inset-left));padding-right:max(18px,env(safe-area-inset-right));font-family:Montserrat,sans-serif;font-size:0.75rem;">
-    <a href="../index.html" style="color:#64748b;text-decoration:none;">← Service offers</a>
+  <div class="site-back">
+    <a href="../index.html">← Service offers</a>
   </div>
   <nav class="nav" aria-label="Report header">
     <div class="nav-brand">
@@ -811,15 +1019,17 @@
       </div>
       <div class="chart-card" style="margin-top:16px">
         <h3>Channel notes (sample)</h3>
-        <table class="data-table">
-          <thead><tr><th>Source</th><th>Demo signal</th><th>Operational idea</th></tr></thead>
-          <tbody>
-            <tr><td>Hospital / provider</td><td class="num">Strong to co-occurring</td><td>Quarterly liaison lunch + one-page fax-back</td></tr>
-            <tr><td>Court / DUII</td><td class="num">Steady</td><td>Automate certificate turnaround tracking</td></tr>
-            <tr><td>Digital / search</td><td class="num">Rising</td><td>Align landing pages to evening IOP keywords</td></tr>
-            <tr><td>Community / alumni</td><td class="num">High trust</td><td>Peer event ROI in same dashboard</td></tr>
-          </tbody>
-        </table>
+        <div class="table-scroll">
+          <table class="data-table">
+            <thead><tr><th>Source</th><th>Demo signal</th><th>Operational idea</th></tr></thead>
+            <tbody>
+              <tr><td>Hospital / provider</td><td class="num">Strong to co-occurring</td><td>Quarterly liaison lunch + one-page fax-back</td></tr>
+              <tr><td>Court / DUII</td><td class="num">Steady</td><td>Automate certificate turnaround tracking</td></tr>
+              <tr><td>Digital / search</td><td class="num">Rising</td><td>Align landing pages to evening IOP keywords</td></tr>
+              <tr><td>Community / alumni</td><td class="num">High trust</td><td>Peer event ROI in same dashboard</td></tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
 
@@ -847,10 +1057,12 @@
         </div>
         <div class="chart-card">
           <h3>Readiness checklist (demo)</h3>
-          <table class="data-table">
-            <thead><tr><th>Signal</th><th>Status</th><th>Note</th></tr></thead>
-            <tbody id="staffTableBody"></tbody>
-          </table>
+          <div class="table-scroll">
+            <table class="data-table">
+              <thead><tr><th>Signal</th><th>Status</th><th>Note</th></tr></thead>
+              <tbody id="staffTableBody"></tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>
